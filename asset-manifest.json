@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/virtual-zoo/static/css/main.7acaea2f.css",
-    "main.js": "/virtual-zoo/static/js/main.d7ba2a0c.js",
+    "main.css": "/virtual-zoo/static/css/main.46f192ac.css",
+    "main.js": "/virtual-zoo/static/js/main.5818a384.js",
     "index.html": "/virtual-zoo/index.html",
-    "main.7acaea2f.css.map": "/virtual-zoo/static/css/main.7acaea2f.css.map",
-    "main.d7ba2a0c.js.map": "/virtual-zoo/static/js/main.d7ba2a0c.js.map"
+    "main.46f192ac.css.map": "/virtual-zoo/static/css/main.46f192ac.css.map",
+    "main.5818a384.js.map": "/virtual-zoo/static/js/main.5818a384.js.map"
   },
   "entrypoints": [
-    "static/css/main.7acaea2f.css",
-    "static/js/main.d7ba2a0c.js"
+    "static/css/main.46f192ac.css",
+    "static/js/main.5818a384.js"
   ]
 }

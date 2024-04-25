@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import css from './App.module.css';
 
 axios.defaults.baseURL = 'http://localhost:1337/';
 
@@ -18,7 +21,7 @@ export const App = () => {
         const res = await axios.get('animals');
         setAnimals(res.data);
       } catch (err) {
-        console.log(err);
+        notifyE(err.message);
       }
     };
 
@@ -27,11 +30,12 @@ export const App = () => {
 
   const deleteAnimal = async id => {
     try {
-      await axios.delete(`animals/${id}`);
+      const res = await axios.delete(`animals/${id}`);
       const newData = animals.filter(animal => animal.id !== id);
       setAnimals(newData);
+      notifyS(res.data.message);
     } catch (err) {
-      console.log(err);
+      notifyE(err.message);
     }
   };
 
@@ -46,7 +50,7 @@ export const App = () => {
       });
       setAnimals(updatedAnimals);
     } catch (err) {
-      console.log(err);
+      notifyE(err.message);
     }
   };
 
@@ -62,8 +66,9 @@ export const App = () => {
       });
       const updatedData = await axios.get('animals');
       setAnimals(updatedData.data);
+      notifyS(res.data.message);
     } catch (err) {
-      console.log(err);
+      notifyE(err.message);
     }
   };
 
@@ -72,15 +77,19 @@ export const App = () => {
     setNewAnimal({ ...newAnimal, [name]: value });
   };
 
+  const notifyS = message => toast.success(message);
+  const notifyE = message => toast.error(message);
+
   return (
-    <div>
-      <div>Virtual Zoo</div>
-      <ul>
+    <div className={css.wrapper}>
+      <h1 className={css.title}>Virtual Zoo</h1>
+      <ul className={css.list}>
         {animals.map(animal => (
-          <li key={animal.id}>
+          <li className={css.listItem} key={animal.id}>
             <p>
               Name:{' '}
               <input
+                className={css.listItemInput}
                 type="text"
                 value={animal.hologram_name}
                 onChange={e =>
@@ -91,6 +100,7 @@ export const App = () => {
             <p>
               Weight:{' '}
               <input
+                className={css.listItemInput}
                 type="text"
                 value={animal.weight}
                 onChange={e => updateField(animal.id, 'weight', e.target.value)}
@@ -99,6 +109,7 @@ export const App = () => {
             <p>
               Super power:{' '}
               <input
+                className={css.listItemInput}
                 type="text"
                 value={animal.superpower}
                 onChange={e =>
@@ -109,6 +120,7 @@ export const App = () => {
             <p>
               Extinct since:{' '}
               <input
+                className={css.listItemInput}
                 type="text"
                 value={animal.extinct_since}
                 onChange={e =>
@@ -116,13 +128,18 @@ export const App = () => {
                 }
               />
             </p>
-            <button onClick={() => deleteAnimal(animal.id)}>DELETE</button>
+            <button
+              className={css.deleteButton}
+              onClick={() => deleteAnimal(animal.id)}
+            >
+              DELETE
+            </button>
           </li>
         ))}
       </ul>
-      <div>
-        <h2>Add New Animal</h2>
+      <div className={css.addAnimalWrapper}>
         <input
+          className={css.listItemInput}
           type="text"
           name="hologram_name"
           value={newAnimal.hologram_name}
@@ -130,6 +147,7 @@ export const App = () => {
           placeholder="Name"
         />
         <input
+          className={css.listItemInput}
           type="text"
           name="weight"
           value={newAnimal.weight}
@@ -137,6 +155,7 @@ export const App = () => {
           placeholder="Weight"
         />
         <input
+          className={css.listItemInput}
           type="text"
           name="superpower"
           value={newAnimal.superpower}
@@ -144,114 +163,18 @@ export const App = () => {
           placeholder="Super power"
         />
         <input
+          className={css.listItemInput}
           type="text"
           name="extinct_since"
           value={newAnimal.extinct_since}
           onChange={handleChange}
           placeholder="Extinct since"
         />
-        <button onClick={addAnimal}>Add Animal</button>
+        <button className={css.addButton} onClick={addAnimal}>
+          ADD ANIMAL
+        </button>
       </div>
+      <ToastContainer />
     </div>
   );
 };
-
-// import { useEffect, useState } from 'react';
-// import axios from 'axios';
-
-// axios.defaults.baseURL = 'http://localhost:1337/';
-
-// export const App = () => {
-//   const [animals, setAnimals] = useState([]);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const res = await axios.get('animals');
-//         setAnimals(res.data);
-//       } catch (err) {
-//         console.log(err);
-//       }
-//     };
-
-//     fetchData();
-//   }, []);
-
-//   console.log(animals);
-
-//   const deleteAnimal = async id => {
-//     try {
-//       await axios.delete(`animals/${id}`);
-//       const newData = animals.filter(animal => animal.id !== id);
-//       setAnimals(newData);
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   };
-
-//   const updateField = async (id, field, value) => {
-//     try {
-//       await axios.patch(`animals/${id}`, { [field]: value });
-//       const updatedAnimals = animals.map(animal => {
-//         if (animal.id === id) {
-//           return { ...animal, [field]: value };
-//         }
-//         return animal;
-//       });
-//       setAnimals(updatedAnimals);
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <div>Virtual Zoo</div>
-//       <ul>
-//         {animals.map(animal => (
-//           <li key={animal.id}>
-//             <p>
-//               Name:{' '}
-//               <input
-//                 type="text"
-//                 value={animal.hologram_name}
-//                 onChange={e =>
-//                   updateField(animal.id, 'hologram_name', e.target.value)
-//                 }
-//               />
-//             </p>
-//             <p>
-//               Weight:{' '}
-//               <input
-//                 type="text"
-//                 value={animal.weight}
-//                 onChange={e => updateField(animal.id, 'weight', e.target.value)}
-//               />
-//             </p>
-//             <p>
-//               Super power:{' '}
-//               <input
-//                 type="text"
-//                 value={animal.superpower}
-//                 onChange={e =>
-//                   updateField(animal.id, 'superpower', e.target.value)
-//                 }
-//               />
-//             </p>
-//             <p>
-//               Extinct since:{' '}
-//               <input
-//                 type="text"
-//                 value={animal.extinct_since}
-//                 onChange={e =>
-//                   updateField(animal.id, 'extinct_since', e.target.value)
-//                 }
-//               />
-//             </p>
-//             <button onClick={() => deleteAnimal(animal.id)}>DELETE</button>
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// };
